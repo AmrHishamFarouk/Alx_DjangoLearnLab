@@ -7,6 +7,7 @@ from .models import Library
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login
 
 def register(request):
     if request.method == 'POST':
