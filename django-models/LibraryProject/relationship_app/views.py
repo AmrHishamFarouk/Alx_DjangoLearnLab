@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from relationship_app.models import Book
 from django.views.generic.detail import DetailView
 from relationship_app.models import Library
+from .models import Library
 
 def list_books(request):
     books = Book.objects.all()
