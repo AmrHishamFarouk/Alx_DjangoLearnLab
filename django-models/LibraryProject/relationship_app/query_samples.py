@@ -1,6 +1,9 @@
 #query books by author
-books_by_author = Books.object.all().filter(author__name='author_name')
+author = Author.objects.get(name='author_name')
+books_by_author = author.books.all() 
 #all books
-books = Books.objects.all().filter(library__name='library_name')
+library = Library.objects.get(name='Library_name')
+books_in_library = library.books.all()
 #librarian
-librarian = librarian.objects.all().filter(library__name='library_name')
+library = Library.objects.get(name='Library_name') 
+librarian = library.librarian
