@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
-from .models import Post
+from .models import Post, Book
 from django.http import HttpResponseForbidden
 
 # View to create a post
@@ -38,3 +38,14 @@ def view_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
     return render(request, 'view_post.html', {'post': post})
 
+
+
+# View to list all books (requires 'can_view' permission)
+@permission_required('bookshelf.can_view', raise_exception=True)
+def book_list(request):
+    """
+    View to list all books in the bookshelf.
+    Only users with 'can_view' permission can access this page.
+    """
+    books = Book.objects.all()  # Fetch all books from the database
+    return render(request, 'bookshelf/book_list.html', {'books': books})
