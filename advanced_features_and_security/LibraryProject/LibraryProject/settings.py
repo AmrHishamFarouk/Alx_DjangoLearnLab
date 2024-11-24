@@ -159,3 +159,38 @@ SECURE_HSTS_PRELOAD = True
 # Optional: Enforce same-origin policy for cookies
 CSRF_COOKIE_HTTPONLY = True  # CSRF cookie is not accessible via JavaScript
 SESSION_COOKIE_HTTPONLY = True  # Session cookie is not accessible via JavaScript
+
+# settings.py
+
+# Redirect all HTTP requests to HTTPS
+SECURE_SSL_REDIRECT = True  # Ensure all non-HTTPS traffic is redirected to HTTPS
+
+# HTTP Strict Transport Security (HSTS)
+SECURE_HSTS_SECONDS = 31536000  # Set the HSTS max-age to 1 year (in seconds)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True  # Apply HSTS policy to all subdomains
+SECURE_HSTS_PRELOAD = True  # Enable HSTS preload, which adds the domain to browsers' preload lists
+
+# Secure Cookies
+SESSION_COOKIE_SECURE = True  # Ensure session cookies are only transmitted over HTTPS
+CSRF_COOKIE_SECURE = True  # Ensure CSRF cookies are only transmitted over HTTPS
+
+# settings.py
+
+# Set to True to mark the cookies as HttpOnly for enhanced security
+SESSION_COOKIE_HTTPONLY = True  # Prevents JavaScript access to the session cookie
+CSRF_COOKIE_HTTPONLY = True  # Prevents JavaScript access to the CSRF cookie
+
+# SameSite Cookie Setting
+SESSION_COOKIE_SAMESITE = 'Strict'  # Prevents sending cookies in cross-site requests
+CSRF_COOKIE_SAMESITE = 'Strict'  # Prevents sending CSRF cookies in cross-site requests
+
+# settings.py
+
+# Prevent your site from being framed (clickjacking protection)
+X_FRAME_OPTIONS = 'DENY'  # Prevents your content from being embedded in an iframe
+
+# Prevent browsers from sniffing content types
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Ensures browsers respect declared content types
+
+# Enable browser XSS filtering
+SECURE_BROWSER_XSS_FILTER = True  # Enables the browser's XSS filter to prevent cross-site scripting attacks
