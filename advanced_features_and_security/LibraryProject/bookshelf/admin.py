@@ -10,13 +10,23 @@ class BookAdmin(admin.ModelAdmin):
 
 admin.site.register(Book, BookAdmin)
 
-
-@admin.register(CustomUser)
+# Define the custom admin for the CustomUser model
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
+    list_display = ['email', 'username', 'date_of_birth', 'is_staff', 'is_active']
+    list_filter = ['is_staff', 'is_active', 'date_of_birth']
+    search_fields = ['email', 'username']
+    ordering = ['email']
+
+    # Fields to be displayed in the admin form for editing users
     fieldsets = UserAdmin.fieldsets + (
         (None, {'fields': ('date_of_birth', 'profile_photo')}),
     )
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('date_of_birth', 'profile_photo')}),
+        (None, {'fields': ('email', 'date_of_birth', 'profile_photo')}),
     )
+    # Ensure that 'email' is set as the username field
+    required_fields = ['email']
+
+# Register the CustomUser model with the CustomUserAdmin
+admin.site.register(CustomUser, CustomUserAdmin)
