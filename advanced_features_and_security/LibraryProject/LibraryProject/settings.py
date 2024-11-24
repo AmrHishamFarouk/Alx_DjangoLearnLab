@@ -38,8 +38,16 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bookshelf',
+    'csp',
     'relationship_app'
 ]
+
+# Set Content Security Policy
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')  # Allow scripts from trusted sources
+CSP_STYLE_SRC = ("'self'", 'https://trusted.cdn.com')   # Allow styles from trusted sources
+CSP_IMG_SRC = ("'self'",)  # Allow images only from the same domain
+
 AUTH_USER_MODEL = 'bookshelf.CustomUser'
 
 MIDDLEWARE = [
@@ -130,3 +138,24 @@ LOGOUT_REDIRECT_URL = '/login/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Set to False in production to disable debug mode and avoid revealing sensitive information
+DEBUG = False
+
+# Security settings to protect against XSS and clickjacking
+SECURE_BROWSER_XSS_FILTER = True  # Enables browser's XSS filter
+X_FRAME_OPTIONS = 'DENY'  # Prevents the website from being embedded in a frame (clickjacking protection)
+SECURE_CONTENT_TYPE_NOSNIFF = True  # Prevents browsers from guessing content types
+
+# Enforce secure cookies to be transmitted only over HTTPS (for production)
+CSRF_COOKIE_SECURE = True  # CSRF cookie is only sent over HTTPS
+SESSION_COOKIE_SECURE = True  # Session cookie is only sent over HTTPS
+
+# Optional: Enforce HTTP Strict Transport Security (HSTS) for added security
+SECURE_HSTS_SECONDS = 31536000  # Enforce HTTPS for 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+# Optional: Enforce same-origin policy for cookies
+CSRF_COOKIE_HTTPONLY = True  # CSRF cookie is not accessible via JavaScript
+SESSION_COOKIE_HTTPONLY = True  # Session cookie is not accessible via JavaScript

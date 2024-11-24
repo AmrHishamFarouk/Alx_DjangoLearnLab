@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import permission_required
 from .models import Post, Book
 from django.http import HttpResponseForbidden
+from .forms import BookSearchForm
 
 # View to create a post
 @permission_required('app_name.can_create', raise_exception=True)
@@ -49,3 +50,20 @@ def book_list(request):
     """
     books = Book.objects.all()  # Fetch all books from the database
     return render(request, 'bookshelf/book_list.html', {'books': books})
+
+def book_search(request):
+    # Handle GET requests and initialize the form
+    if request.method == "GET":
+        form = BookSearchForm(request.GET)  # Pass GET parameters to the form
+        if form.is_valid():
+            # If the form is valid, use the cleaned query to filter books
+            query = form.cleaned_data['query']
+            books = Book.objects.filter(title__icontains=query)  # Search books by title
+        else:
+            # If no valid query, display all books
+            books = Book.objects.all()
+    else:
+        books = Book.objects.all()  # Display all books if the request isn't GET
+    
+    # Return the context with books and form
+    return render(request, 'bookshelf/book_list.html', {'books': books, 'form': form})
