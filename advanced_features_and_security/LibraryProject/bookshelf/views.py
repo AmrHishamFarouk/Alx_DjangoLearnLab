@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import permission_required
 from .models import Post, Book
 from django.http import HttpResponseForbidden
 from .forms import BookSearchForm
+from .forms import ExampleForm
 
 # View to create a post
 @permission_required('app_name.can_create', raise_exception=True)
