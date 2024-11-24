@@ -194,3 +194,5 @@ SECURE_CONTENT_TYPE_NOSNIFF = True  # Ensures browsers respect declared content 
 
 # Enable browser XSS filtering
 SECURE_BROWSER_XSS_FILTER = True  # Enables the browser's XSS filter to prevent cross-site scripting attacks
+
+SECURE_PROXY_SSL_HEADER", "HTTP_X_FORWARDED_PROTO
