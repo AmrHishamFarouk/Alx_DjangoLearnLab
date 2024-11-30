@@ -8,4 +8,3 @@ urlpatterns = [
 
 
 
-#  generics.ListAPIView
