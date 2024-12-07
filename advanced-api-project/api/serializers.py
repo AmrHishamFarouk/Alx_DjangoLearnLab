@@ -2,7 +2,7 @@ from rest_framework import serializers
 from datetime import date
 from .models import Book, Author
 
-class BookSerializer(serializers.ModelSerializer):
+class BookSerializer(serializers.ModelSerializer):    
     class Meta:
         model = Book
         fields = '__all__'  # Includes all fields: title, publication_year, author
@@ -21,3 +21,4 @@ class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Author
         fields = ['name', 'books']  # Includes name and related books
+

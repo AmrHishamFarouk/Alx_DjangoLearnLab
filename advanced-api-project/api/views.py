@@ -38,17 +38,43 @@ class AuthorListCreateAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #second assignment and a better way
-from rest_framework import generics
+
+from django_filters.rest_framework import DjangoFilterBackend
+from .filters import BookFilter
+from rest_framework.generics import ListAPIView
+
+from rest_framework.filters import SearchFilter, OrderingFilter
+
+
 
 # ListView: Retrieve all books
 # ListView: Open for everyone (read-only)
-class BookListView(generics.ListAPIView):
+
+class BookListView(ListAPIView):
+    # """
+    # API view for listing books with filtering, searching, and ordering capabilities.
+    # """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+
     permission_classes = [permissions.AllowAny]  # Open to all users (read-only access)
-    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
-    search_fields = ['title', 'author__name']  # Allow search by title and author name
-    ordering_fields = ['publication_year', 'title']  # Allow ordering by year or title
+
+    # Enable filtering, searching, and ordering
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+
+    # Filtering setup
+    filterset_class = BookFilter  # Allows filtering by title, author, and publication_year
+
+    # Search setup
+    search_fields = ['title', 'author__name']  # Enables search by book title or author's name
+
+    # Ordering setup
+    ordering_fields = ['title', 'publication_year', 'author__name']  # Fields users can order by
+    ordering = ['title']  # Default ordering: alphabetical by title
+
+
+
+
 
 # DetailView: Retrieve a single book by ID
 # DetailView: Open for everyone (read-only)
