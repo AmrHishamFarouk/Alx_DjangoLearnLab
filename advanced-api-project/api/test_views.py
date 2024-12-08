@@ -56,3 +56,5 @@ class BookAPITestCase(APITestCase):
         response = self.client.get(f"{self.list_url}?ordering=title")
         titles = [book['title'] for book in response.data]
         self.assertEqual(titles, ["Another Book", "Sample Book"])
+
+# self.client.login
