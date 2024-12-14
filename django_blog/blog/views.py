@@ -29,3 +29,5 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
     def get_object(self):
         return self.request.user
+
+# blog/views.py doesn't contain: ["POST", "method", "save()"]
