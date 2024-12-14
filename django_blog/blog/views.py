@@ -16,7 +16,7 @@ class CustomUserCreationForm(UserCreationForm):
 
 # Registration view
 class RegisterView(CreateView):
-    template_name = 'registration/register.html'
+    template_name = 'blog/register.html'
     form_class = CustomUserCreationForm
     success_url = reverse_lazy('login')
 
@@ -24,7 +24,7 @@ class RegisterView(CreateView):
 class ProfileView(LoginRequiredMixin, UpdateView):
     model = User
     fields = ['username', 'email']
-    template_name = 'registration/profile.html'
+    template_name = 'blog/profile.html'
     success_url = reverse_lazy('profile')
 
     def get_object(self):
