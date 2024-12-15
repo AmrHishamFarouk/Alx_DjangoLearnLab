@@ -21,3 +21,5 @@ urlpatterns = [
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
 
 ]
+
+# blog/urls.py doesn't contain: ["comment/<int:pk>/update/", "post/<int:pk>/comments/new/", "comment/<int:pk>/delete/"]
