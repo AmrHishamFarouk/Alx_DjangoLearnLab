@@ -46,3 +46,5 @@ urlpatterns = [
 # blog/urls.py doesn't contain: ["comment/<int:pk>/update/", "post/<int:pk>/comments/new/", "comment/<int:pk>/delete/"]
 
 # blog/urls.py doesn't contain: ["post/<int:pk>/delete/", "post/<int:pk>/update/", "post/new/"]
+
+# blog/urls.py doesn't contain: ["tags/<slug:tag_slug>/", "PostByTagListView.as_view()"]
