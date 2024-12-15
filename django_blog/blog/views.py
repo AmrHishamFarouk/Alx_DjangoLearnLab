@@ -6,6 +6,13 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django import forms
 
+from django.views.generic import ListView
+
+from django.shortcuts import get_object_or_404, redirect
+from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from .models import Post, Comment
+from .forms import CommentForm
 # Registration form
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -32,11 +39,14 @@ class ProfileView(LoginRequiredMixin, UpdateView):
 
 # blog/views.py doesn't contain: ["POST", "method", "save()"]
 
-from django.shortcuts import get_object_or_404, redirect
-from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from .models import Post, Comment
-from .forms import CommentForm
+
+
+class PostListView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+    ordering = ['-published_date']  # Display posts in descending order of publication
+
 
 class PostDetailView(DetailView):
     model = Post
@@ -46,6 +56,43 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         context['comment_form'] = CommentForm()
         return context
+
+class PostCreateView(LoginRequiredMixin, CreateView):
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # Automatically set the post author
+        return super().form_valid(form)
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    fields = ['title', 'content']
+    template_name = 'blog/post_form.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user  # Ensure author remains unchanged
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # Only allow authors to edit
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    template_name = 'blog/post_confirm_delete.html'
+    success_url = reverse_lazy('post-list')  # Redirect to post list after deletion
+
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # Only allow authors to delete
+
+
+
+
 
 class CommentCreateView(LoginRequiredMixin, CreateView):
     model = Comment

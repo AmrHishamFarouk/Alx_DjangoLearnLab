@@ -1,28 +1,53 @@
 {% extends 'blog/base.html' %}
 {% block content %}
-<h1>{{ object.title }}</h1>
-<p>{{ object.content }}</p>
-<p>By {{ object.author }} on {{ object.published_date }}</p>
+<div class="post-detail">
+    <h1>{{ object.title }}</h1>
+    <p>{{ object.content }}</p>
+    <p>
+        <em>By {{ object.author }} on {{ object.published_date|date:"F j, Y, g:i a" }}</em>
+    </p>
 
-<h2>Comments:</h2>
-<ul>
-    {% for comment in object.comments.all %}
+    {% if user == object.author %}
+    <p>
+        <a href="{% url 'post-update' object.id %}" class="btn btn-warning btn-sm">Edit Post</a>
+        <a href="{% url 'post-delete' object.id %}" class="btn btn-danger btn-sm">Delete Post</a>
+    </p>
+    {% endif %}
+</div>
+
+<hr>
+
+<div class="comments-section">
+    <h2>Comments:</h2>
+    {% if object.comments.exists %}
+    <ul class="comment-list">
+        {% for comment in object.comments.all %}
         <li>
-            <strong>{{ comment.author }}</strong>: {{ comment.content }}
+            <p><strong>{{ comment.author }}</strong>:</p>
+            <p>{{ comment.content }}</p>
+            <p><small>Posted on {{ comment.created_at|date:"F j, Y, g:i a" }}</small></p>
             {% if comment.author == user %}
-                <a href="{% url 'comment-update' comment.id %}">Edit</a> |
-                <a href="{% url 'comment-delete' comment.id %}">Delete</a>
+            <p>
+                <a href="{% url 'comment-update' comment.id %}" class="btn btn-link btn-sm">Edit</a>
+                <a href="{% url 'comment-delete' comment.id %}" class="btn btn-link btn-sm text-danger">Delete</a>
+            </p>
             {% endif %}
         </li>
-    {% empty %}
-        <li>No comments yet. Be the first to comment!</li>
-    {% endfor %}
-</ul>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No comments yet. Be the first to comment!</p>
+    {% endif %}
+</div>
 
-<h3>Add a Comment:</h3>
-<form method="post" action="{% url 'comment-create' object.id %}">
-    {% csrf_token %}
-    {{ comment_form.as_p }}
-    <button type="submit" class="btn btn-primary">Post Comment</button>
-</form>
+<hr>
+
+<div class="add-comment-form">
+    <h3>Add a Comment:</h3>
+    <form method="post" action="{% url 'comment-create' object.id %}">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <button type="submit" class="btn btn-primary">Post Comment</button>
+    </form>
+</div>
 {% endblock %}
