@@ -37,7 +37,6 @@ class ProfileView(LoginRequiredMixin, UpdateView):
     def get_object(self):
         return self.request.user
 
-# blog/views.py doesn't contain: ["POST", "method", "save()"]
 
 
 
@@ -127,3 +126,7 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+
+
+# blog/views.py doesn't contain: ["POST", "method", "save()"]
+# blog/views.py doesn't contain: ["from django.contrib.auth.decorators import login_required"]
