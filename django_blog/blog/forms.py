@@ -27,3 +27,5 @@ class CommentForm(forms.ModelForm):
         if post_id:
             post = Post.objects.get(id=post_id)
             self.fields['tags'].queryset = post.tags.all()
+
+# blog/forms.py doesn't contain: ["TagWidget()", "widgets"]
