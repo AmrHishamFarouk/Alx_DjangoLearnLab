@@ -16,6 +16,7 @@ from .views import (
     CommentUpdateView,
     CommentDeleteView,
 )
+from .views import search_posts, posts_by_tag
 
 urlpatterns = [
     path('login/', LoginView.as_view(template_name='blog/login.html'), name='login'),
@@ -35,7 +36,12 @@ urlpatterns = [
     path('comments/<int:pk>/edit/', CommentUpdateView.as_view(), name='comment-update'),
     path('comments/<int:pk>/delete/', CommentDeleteView.as_view(), name='comment-delete'),
 
+    path('search/', search_posts, name='search-posts'),
+    path('tags/<str:tag_name>/', posts_by_tag, name='tagged-posts'),
 ]
+
+
+
 
 # blog/urls.py doesn't contain: ["comment/<int:pk>/update/", "post/<int:pk>/comments/new/", "comment/<int:pk>/delete/"]
 

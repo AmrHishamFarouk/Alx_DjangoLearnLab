@@ -13,6 +13,10 @@ from django.views.generic import DetailView, CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from .models import Post, Comment
 from .forms import CommentForm
+
+from django.db.models import Q
+from django.shortcuts import render
+
 # Registration form
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
@@ -103,8 +107,14 @@ class CommentCreateView(LoginRequiredMixin, CreateView):
         form.instance.post = get_object_or_404(Post, id=self.kwargs['post_id'])
         return super().form_valid(form)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['post'] = get_object_or_404(Post, id=self.kwargs['post_id'])
+        return context
+
     def get_success_url(self):
         return self.object.post.get_absolute_url()
+
 
 class CommentUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Comment
@@ -127,6 +137,32 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_success_url(self):
         return self.object.post.get_absolute_url()
 
+
+
+def search_posts(request):
+    # Get the query parameter, default to an empty string if not provided
+    query = request.GET.get('q', '').strip()
+
+    # If query is empty, return all posts
+    if not query:
+        posts = Post.objects.all()
+    else:
+        # Perform the filtering only if the query is not empty
+        posts = Post.objects.filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(tags__name__icontains=query)
+        ).distinct()
+
+    # Render the search results
+    return render(request, 'blog/search_results.html', {'posts': posts, 'query': query})
+
+    
+def posts_by_tag(request, tag_name):
+    tag = get_object_or_404(Tag, name=tag_name)
+    posts = tag.posts.all()
+
+    return render(request, 'blog/posts_by_tag.html', {'tag': tag, 'posts': posts})
 
 # blog/views.py doesn't contain: ["POST", "method", "save()"]
 # blog/views.py doesn't contain: ["from django.contrib.auth.decorators import login_required"]

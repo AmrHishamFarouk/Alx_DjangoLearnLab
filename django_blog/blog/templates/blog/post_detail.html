@@ -7,6 +7,22 @@
         <em>By {{ object.author }} on {{ object.published_date|date:"F j, Y, g:i a" }}</em>
     </p>
 
+    <!-- Display tags associated with the post -->
+    <p>
+        <strong>Tags:</strong>
+        {% if object.tags.all %}
+            <ul class="tags-list">
+                {% for tag in object.tags.all %}
+                    <li>
+                        <a href="{% url 'post-list' %}?tag={{ tag.name }}">{{ tag.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No tags assigned yet.</p>
+        {% endif %}
+    </p>
+
     {% if user == object.author %}
     <p>
         <a href="{% url 'post-update' object.id %}" class="btn btn-warning btn-sm">Edit Post</a>
@@ -26,6 +42,18 @@
             <p><strong>{{ comment.author }}</strong>:</p>
             <p>{{ comment.content }}</p>
             <p><small>Posted on {{ comment.created_at|date:"F j, Y, g:i a" }}</small></p>
+
+            <!-- Display comment tags -->
+            {% if comment.tags.all %}
+                <p><strong>Tags:</strong>
+                <ul class="tags-list">
+                    {% for tag in comment.tags.all %}
+                        <li>{{ tag.name }}</li>
+                    {% endfor %}
+                </ul>
+                </p>
+            {% endif %}
+
             {% if comment.author == user %}
             <p>
                 <a href="{% url 'comment-update' comment.id %}" class="btn btn-link btn-sm">Edit</a>
