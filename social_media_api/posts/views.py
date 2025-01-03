@@ -66,3 +66,5 @@ class UnlikePostView(generics.GenericAPIView):
         if like.exists():
             like.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+# posts/views.py doesn't contain: ["generics.get_object_or_404(Post, pk=pk)"]
