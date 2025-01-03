@@ -16,3 +16,20 @@ class CustomAuthToken(ObtainAuthToken):
         response = super(CustomAuthToken, self).post(request, *args, **kwargs)
         token = Token.objects.get(key=response.data['token'])
         return Response({'token': token.key, 'user_id': token.user_id})
+
+from rest_framework import status
+from rest_framework.decorators import api_view
+
+User = get_user_model()
+
+@api_view(['POST'])
+def follow_user(request, user_id):
+    user_to_follow = User.objects.get(id=user_id)
+    request.user.following.add(user_to_follow)
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def unfollow_user(request, user_id):
+    user_to_unfollow = User.objects.get(id=user_id)
+    request.user.following.remove(user_to_unfollow)
+    return Response(status=status.HTTP_204_NO_CONTENT)

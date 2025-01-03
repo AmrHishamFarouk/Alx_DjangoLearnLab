@@ -1,13 +1,13 @@
-from django.db import models
-from django.contrib.auth.models import AbstractUser
-
 from django.contrib.auth import get_user_model
-
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+    
 # Create your models here.
 class MyUser(AbstractUser):
     bio = models.TextField(max_length=40,blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/',blank=True)
-    followers = models.ManyToManyField('self',symmetrical=False,related_name='following')
+    following = models.ManyToManyField('self', symmetrical=False, related_name='followers_set')
+    followers = models.ManyToManyField('self', symmetrical=False, related_name='following_set')
 
     groups = models.ManyToManyField(
         'auth.Group',
