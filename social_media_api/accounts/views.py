@@ -43,3 +43,4 @@ class UserListView(generics.ListAPIView):
     queryset = User.objects.all()
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = UserSerializer
+# accounts/views.py doesn't contain: ["generics.GenericAPIView", "permissions.IsAuthenticated", "CustomUser.objects.all()"]
