@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
+from django.contrib.auth import get_user_model
+
 # Create your models here.
 class MyUser(AbstractUser):
     bio = models.TextField(max_length=40,blank=True)
@@ -18,3 +20,5 @@ class MyUser(AbstractUser):
         related_name='custom_user_set',  # To avoid naming conflicts
         blank=True
     )
+
+
