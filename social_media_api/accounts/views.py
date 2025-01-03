@@ -17,19 +17,29 @@ class CustomAuthToken(ObtainAuthToken):
         token = Token.objects.get(key=response.data['token'])
         return Response({'token': token.key, 'user_id': token.user_id})
 
-from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework import generics, permissions, status
+from rest_framework.response import Response
+from django.contrib.auth import get_user_model
 
 User = get_user_model()
 
-@api_view(['POST'])
-def follow_user(request, user_id):
-    user_to_follow = User.objects.get(id=user_id)
-    request.user.following.add(user_to_follow)
-    return Response(status=status.HTTP_204_NO_CONTENT)
+class FollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-@api_view(['POST'])
-def unfollow_user(request, user_id):
-    user_to_unfollow = User.objects.get(id=user_id)
-    request.user.following.remove(user_to_unfollow)
-    return Response(status=status.HTTP_204_NO_CONTENT)
+    def post(self, request, user_id):
+        user_to_follow = User.objects.get(id=user_id)
+        request.user.following.add(user_to_follow)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UnfollowUserView(generics.GenericAPIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request, user_id):
+        user_to_unfollow = User.objects.get(id=user_id)
+        request.user.following.remove(user_to_unfollow)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class UserListView(generics.ListAPIView):
+    queryset = User.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
+    serializer_class = UserSerializer
